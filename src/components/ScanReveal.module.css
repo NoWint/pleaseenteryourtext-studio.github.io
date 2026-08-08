@@ -1,0 +1,16 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.scanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ink { background: var(--paper); box-shadow: 0 0 8px var(--paper); }
+.paper { background: var(--ink); box-shadow: 0 0 8px var(--ink); }

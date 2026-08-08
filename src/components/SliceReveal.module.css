@@ -1,0 +1,14 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.slice {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ink { background: var(--ink); }
+.paper { background: var(--paper); }
