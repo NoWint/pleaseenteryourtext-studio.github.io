@@ -1,0 +1,16 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050508;
+}
+.fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(131, 56, 236, 0.06), transparent 60%),
+    linear-gradient(180deg, #050508 0%, #0a0a12 50%, #120a1a 100%);
+}

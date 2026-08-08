@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 融合方向 A+B</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'SF Mono','JetBrains Mono',ui-monospace,monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  .stage{max-width:1320px;margin:0 auto;position:relative;border:1px solid #1f1f1f}
+  .mock{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000}
+
+  /* === B 骨架：黑白对半斜切 === */
+  .b-bg{position:absolute;inset:0;background:#fff}
+  .b-slice{position:absolute;top:0;left:0;width:62%;height:100%;background:#000;clip-path:polygon(0 0,100% 0,68% 100%,0 100%)}
+  .b-slice2{position:absolute;top:0;left:0;width:44%;height:100%;background:#0c0c0c;clip-path:polygon(0 0,100% 0,58% 100%,0 100%);opacity:.6}
+  /* 右下白色区也加一层斜切灰条做层次 */
+  .b-slice3{position:absolute;right:0;bottom:0;width:40%;height:60%;background:#e8e8e8;clip-path:polygon(20% 0,100% 0,100% 100%,0 100%)}
+  .b-vline{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.12)}
+
+  /* === A HUD 层叠加 === */
+  .a-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+  .a-scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 4px);pointer-events:none}
+  /* 白色区用深色网格 */
+  .a-grid-w{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;mix-blend-mode:multiply}
+
+  .a-corner{position:absolute;width:30px;height:30px;border:2px solid #fff}
+  .a-c-tl{top:18px;left:18px;border-right:0;border-bottom:0}
+  .a-c-bl{bottom:18px;left:18px;border-right:0;border-top:0}
+  .a-c-br{bottom:18px;right:18px;border-left:0;border-top:0;border-color:#000}
+  .a-c-tr{top:18px;right:18px;border-left:0;border-bottom:0;border-color:#000}
+
+  .a-topbar{position:absolute;top:20px;left:60px;right:60px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.25em;color:#888;text-transform:uppercase}
+  .a-topbar .live{display:flex;align-items:center;gap:6px;color:#fff}
+  .a-topbar .live .dot{width:7px;height:7px;background:#fff;border-radius:50%;animation:blip 1.4s infinite}
+  .a-topbar .right{color:#000}
+  .a-topbar .right .live{color:#000}
+  .a-topbar .right .live .dot{background:#000}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* 标题：B 描边镂空 + A 数据前缀 */
+  .title{position:absolute;left:60px;top:36%;transform:translateY(-50%)}
+  .title .pre{font-size:11px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .title .pre::before{content:'';width:22px;height:1px;background:#fff}
+  .title h2{font-size:88px;font-weight:900;letter-spacing:-.03em;line-height:.86;font-family:'SF Pro Display',-apple-system,sans-serif}
+  .title h2 .out{-webkit-text-stroke:2px #fff;color:transparent}
+  .title .sub{font-size:12px;letter-spacing:.25em;color:#bbb;margin-top:14px;text-transform:uppercase;font-family:'SF Mono',monospace}
+
+  /* 右下白色区数据表（A 读出 + B 切片表） */
+  .data-r{position:absolute;right:60px;bottom:60px;width:30%}
+  .data-r .lbl{font-size:9px;letter-spacing:.25em;color:#000;text-transform:uppercase;margin-bottom:8px;opacity:.6}
+  .data-r .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.25);font-size:11px;letter-spacing:.15em;color:#000;text-transform:uppercase;font-family:'SF Mono',monospace}
+  .data-r .row b{font-weight:700}
+  .data-r .row:last-child{border-bottom:0}
+
+  /* 左下 HUD：sync bar + tickrow（深底区） */
+  .hud-bl{position:absolute;left:60px;bottom:60px}
+  .hud-bl .bar{width:140px;margin-bottom:10px}
+  .hud-bl .bar .lbl{font-size:9px;letter-spacing:.2em;color:#888;text-transform:uppercase;margin-bottom:5px}
+  .hud-bl .bar .track{height:2px;background:#222;position:relative}
+  .hud-bl .bar .fill{position:absolute;left:0;top:0;height:100%;width:72%;background:#fff}
+  .hud-bl .tickrow{display:flex;gap:4px}
+  .hud-bl .tickrow i{display:block;width:3px;height:10px;background:#333}
+  .hud-bl .tickrow i.on{background:#fff}
+
+  /* 右上角章戳 + 编号（白底区） */
+  .stamp{position:absolute;right:60px;top:60px;text-align:right;font-size:10px;letter-spacing:.2em;color:#000;text-transform:uppercase;line-height:1.8;font-family:'SF Mono',monospace}
+  .stamp .big{font-size:42px;font-weight:900;letter-spacing:-.02em;line-height:1;color:#000;font-family:'SF Pro Display',sans-serif}
+  .stamp .blk{background:#000;color:#fff;padding:2px 7px;display:inline-block;margin-top:6px}
+
+  /* CTA：B 的斜切按钮 + A 的角标 */
+  .cta{position:absolute;right:60px;bottom:18px;background:#000;color:#fff;padding:10px 22px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,100% 0,90% 100%,0 100%);font-family:'SF Mono',monospace}
+
+  /* 底部坐标条 */
+  .coord{position:absolute;left:60px;bottom:24px;font-size:9px;color:#666;letter-spacing:.2em;font-family:'SF Mono',monospace}
+  .coord b{color:#fff}
+
+  .legend{max-width:1320px;margin:18px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .legend .item{border:1px solid #1f1f1f;padding:14px}
+  .legend .item h4{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#fff;margin-bottom:6px}
+  .legend .item p{font-size:11px;color:#888;line-height:1.6;letter-spacing:.03em}
+  .legend .item .src{font-size:9px;color:#555;letter-spacing:.2em;margin-top:6px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 融合方向</h1>
+  <span class="tag">A 战术 HUD × B 暴力切片</span>
+  <span class="line"></span>
+  <span class="note">确认调性 →</span>
+</div>
+
+<div class="stage">
+  <div class="mock">
+    <!-- B 骨架 -->
+    <div class="b-bg"></div>
+    <div class="b-slice3"></div>
+    <div class="b-slice"></div>
+    <div class="b-slice2"></div>
+    <div class="b-vline"></div>
+
+    <!-- A HUD 层 -->
+    <div class="a-grid"></div>
+    <div class="a-grid-w"></div>
+    <div class="a-scan"></div>
+
+    <!-- 四角标记：左侧白框（深底）、右侧黑框（白底） -->
+    <div class="a-corner a-c-tl"></div>
+    <div class="a-corner a-c-bl"></div>
+    <div class="a-corner a-c-tr"></div>
+    <div class="a-corner a-c-br"></div>
+
+    <!-- 顶栏 -->
+    <div class="a-topbar">
+      <span>PEYT-SYS // v2.6 // SECT 04</span>
+      <span class="live"><i class="dot"></i>LIVE</span>
+      <span class="right"><span class="live"><i class="dot"></i>SYNC</span></span>
+    </div>
+
+    <!-- 标题 -->
+    <div class="title">
+      <div class="pre">// 00 — DESIGNATION</div>
+      <h2>TYPE<br><span class="out">EVERY</span>THING</h2>
+      <div class="sub">PEYT Studio · 请输入文本工作室</div>
+    </div>
+
+    <!-- 右上章戳 -->
+    <div class="stamp">
+      <div class="lbl">EST</div>
+      <div class="big">2026</div>
+      <div class="blk">PEYT // 08</div>
+    </div>
+
+    <!-- 右下数据表 -->
+    <div class="data-r">
+      <div class="lbl">// UNIT READOUT</div>
+      <div class="row"><span>PROJECT</span><b>PEYT-CHAT</b></div>
+      <div class="row"><span>STATUS</span><b>OPEN SOURCE</b></div>
+      <div class="row"><span>MEMBERS</span><b>08</b></div>
+    </div>
+
+    <!-- 左下 HUD -->
+    <div class="hud-bl">
+      <div class="bar">
+        <div class="lbl">SYNC</div>
+        <div class="track"><div class="fill"></div></div>
+      </div>
+      <div class="tickrow"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">加入 →</div>
+
+    <!-- 坐标 -->
+    <div class="coord">LAT <b>00.00</b> · LNG <b>00.00</b> // <b>PEYT-HQ</b></div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="item">
+    <h4>骨架 // B</h4>
+    <p>黑白对半斜切（clip-path）+ 描边镂空字，构成解构冲击力的主体结构。</p>
+    <div class="src">SRC · BRUTALIST SLICE</div>
+  </div>
+  <div class="item">
+    <h4>叠加层 // A</h4>
+    <p>扫描线 + 细网格 + 四角标记 + 数据读出 + sync bar，注入战术 HUD 沉浸信息层。</p>
+    <div class="src">SRC · TACTICAL HUD</div>
+  </div>
+  <div class="item">
+    <h4>咬合规则</h4>
+    <p>深底区用白色 HUD 元素，白底区用黑色 HUD 元素，斜切线是两套语言的接缝。</p>
+    <div class="src">RULE · INVERT ON SLICE</div>
+  </div>
+</div>
+</body>
+</html>

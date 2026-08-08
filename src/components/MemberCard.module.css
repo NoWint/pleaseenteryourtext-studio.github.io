@@ -1,0 +1,66 @@
+.card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: border-color var(--duration-medium) var(--ease-apple),
+              transform var(--duration-medium) var(--ease-apple);
+}
+.card:hover {
+  border-color: rgba(131, 56, 236, 0.3);
+  transform: translateY(-4px);
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: var(--space-2);
+  border: 2px solid var(--hairline);
+}
+.avatarFallback {
+  display: none;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--surface-2);
+  margin-bottom: var(--space-2);
+  border: 2px solid var(--hairline);
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+.tagline {
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.role {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.site {
+  font-size: var(--text-caption);
+  color: var(--text-primary);
+  margin-top: var(--space-1);
+  transition: color var(--duration-fast) var(--ease-apple);
+}
+.site:hover { color: var(--prism-3); }

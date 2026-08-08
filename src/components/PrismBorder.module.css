@@ -1,0 +1,26 @@
+.wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.border {
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 12px;
+  background: var(--prism-gradient);
+  background-size: 200% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.4;
+  transition: opacity var(--duration-medium) var(--ease-apple);
+  animation: prismShift 6s ease-in-out infinite;
+}
+.wrapper:hover .border {
+  opacity: 1;
+}
+@keyframes prismShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

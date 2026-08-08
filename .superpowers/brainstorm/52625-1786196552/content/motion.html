@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 动效层级</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'JetBrains Mono',monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1320px;margin:0 auto}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr}}
+
+  .card{position:relative;background:#000;border:1px solid #1f1f1f;cursor:pointer;transition:border-color .25s;overflow:hidden}
+  .card:hover{border-color:#555}
+  .card.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+  .card-head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #1f1f1f;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888}
+  .card-head .id{color:#fff}
+  .pickflag{position:absolute;top:-1px;right:-1px;background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+  .card.selected .pickflag{opacity:1}
+
+  .mock{position:relative;width:100%;aspect-ratio:8/5;overflow:hidden;background:#000;padding:28px}
+  .scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 4px);pointer-events:none}
+  .corner{position:absolute;width:22px;height:22px;border:1.5px solid #fff}
+  .c-tl{top:14px;left:14px;border-right:0;border-bottom:0}
+  .c-br{bottom:14px;right:14px;border-left:0;border-top:0}
+
+  .card-foot{padding:13px 14px;border-top:1px solid #1f1f1f}
+  .card-foot h3{font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:4px;font-family:'Inter',sans-serif}
+  .card-foot p{font-size:10.5px;color:#888;line-height:1.5;letter-spacing:.02em;font-family:'Inter',sans-serif}
+  .card-foot .meta{font-size:9px;color:#555;letter-spacing:.2em;margin-top:6px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+
+  /* === A: 扫描线入场 === */
+  .a-demo{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
+  .a-line{position:absolute;left:0;right:0;height:2px;background:#fff;box-shadow:0 0 8px #fff;animation:ascan 2.4s ease-in-out infinite}
+  @keyframes ascan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+  .a-title{font-family:'Inter',sans-serif;font-weight:900;font-size:42px;letter-spacing:-.04em;line-height:.88;text-align:center;position:relative;z-index:2}
+  .a-title .out{-webkit-text-stroke:1.5px #fff;color:transparent}
+  .a-sub{font-size:9px;letter-spacing:.25em;color:#888;margin-top:10px;text-transform:uppercase;text-align:center}
+
+  /* === B: 斜切揭示 === */
+  .b-demo{position:relative;height:100%;overflow:hidden}
+  .b-slice{position:absolute;inset:0;background:#fff;clip-path:polygon(0 0,100% 0,100% 0,0 0);animation:breveal 2.4s ease-in-out infinite}
+  @keyframes breveal{0%,100%{clip-path:polygon(0 0,100% 0,100% 0,0 0)}50%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}
+  .b-text{position:absolute;left:24px;top:50%;transform:translateY(-50%);z-index:2}
+  .b-text .pre{font-size:9px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:8px}
+  .b-text h4{font-family:'Inter',sans-serif;font-weight:900;font-size:38px;letter-spacing:-.03em;line-height:.9}
+  .b-text .sub{font-size:9px;letter-spacing:.2em;color:#bbb;margin-top:8px;text-transform:uppercase}
+
+  /* === C: HUD 数据流 === */
+  .c-demo{position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 20px}
+  .c-row{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;border-bottom:1px solid #222;padding:7px 0;opacity:0;animation:cstream 2.4s ease-in-out infinite}
+  .c-row:nth-child(1){animation-delay:0s}
+  .c-row:nth-child(2){animation-delay:.3s}
+  .c-row:nth-child(3){animation-delay:.6s}
+  .c-row:nth-child(4){animation-delay:.9s}
+  .c-row:nth-child(5){animation-delay:1.2s}
+  @keyframes cstream{0%,100%{opacity:0;transform:translateX(-8px)}20%,80%{opacity:1;transform:translateX(0)}}
+  .c-row b{color:#fff;font-weight:700}
+  .c-row .v{color:#888}
+  .c-row .live{color:#fff}
+  .c-bar{height:2px;background:#222;position:relative;margin-top:10px}
+  .c-bar .fill{position:absolute;left:0;top:0;height:100%;background:#fff;animation:cfill 2.4s ease-in-out infinite}
+  @keyframes cfill{0%{width:0}100%{width:72%}}
+
+  /* 全站动效原则 */
+  .principles{max-width:1320px;margin:20px auto 0;border:1px solid #1f1f1f;padding:16px 20px}
+  .principles h4{font-size:10px;letter-spacing:.25em;color:#888;text-transform:uppercase;margin-bottom:12px}
+  .p-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px}
+  .p-list .item{font-size:11px;color:#bbb;line-height:1.5;letter-spacing:.02em;font-family:'JetBrains Mono',monospace}
+  .p-list .item b{color:#fff;font-weight:700}
+  .p-list .item .x{color:#ff4444;margin-right:6px}
+  .p-list .item .ok{color:#fff;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 动效层级</h1>
+  <span class="tag">克制有力 · 明日方舟式</span>
+  <span class="line"></span>
+  <span class="note">选动效方案 →</span>
+</div>
+
+<div class="grid">
+
+  <!-- A: 扫描线入场 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">FX-A</span><span>扫描线入场</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="scan"></div>
+      <div class="corner c-tl"></div><div class="corner c-br"></div>
+      <div class="a-demo">
+        <div class="a-line"></div>
+        <div>
+          <div class="a-title">TYPE<br><span class="out">EVERY</span>THING</div>
+          <div class="a-sub">// SECTION REVEAL</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>A · 扫描线入场</h3>
+      <p>板块进入视口时，一道白色扫描线从上扫过，随后内容揭示。最方舟战斗界面动效，仪式感强。</p>
+      <div class="meta">SCROLL TRIGGER · ONCE · 0.8s</div>
+    </div>
+  </div>
+
+  <!-- B: 斜切揭示 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">FX-B</span><span>斜切揭示</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="scan"></div>
+      <div class="corner c-tl"></div><div class="corner c-br"></div>
+      <div class="b-demo">
+        <div class="b-slice"></div>
+        <div class="b-text">
+          <div class="pre">// 01 — REVEAL</div>
+          <h4>ABOUT</h4>
+          <div class="sub">// CLIP-PATH WIPE</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>B · 斜切揭示</h3>
+      <p>板块进入时，一个斜切色块从边缘划过覆盖再退场，内容在划过后显现。解构感最强，呼应斜切骨架。</p>
+      <div class="meta">SCROLL TRIGGER · ONCE · 0.6s</div>
+    </div>
+  </div>
+
+  <!-- C: HUD 数据流 -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">FX-C</span><span>HUD 数据流</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="scan"></div>
+      <div class="corner c-tl"></div><div class="corner c-br"></div>
+      <div class="c-demo">
+        <div class="c-row"><span>PROJECT</span><span class="v">→ <b>PEYT-CHAT</b></span></div>
+        <div class="c-row"><span>STATUS</span><span class="live">● ACTIVE</span></div>
+        <div class="c-row"><span>MEMBERS</span><span class="v">→ <b>08</b></span></div>
+        <div class="c-row"><span>SECTOR</span><span class="v">→ <b>04</b></span></div>
+        <div class="c-bar"><div class="fill"></div></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>C · HUD 数据流</h3>
+      <p>数据行逐条左滑入场 + sync bar 填充。终端/仪表盘质感，信息感强，但纯装饰数据可能显啰嗦。</p>
+      <div class="meta">SCROLL TRIGGER · STAGGER 0.3s</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 动效原则 -->
+<div class="principles">
+  <h4>// 全站动效原则</h4>
+  <div class="p-list">
+    <div class="item"><span class="ok">✓</span><b>滚动触发一次</b>（once: true），不反复闪</div>
+    <div class="item"><span class="x">✗</span>不做视差/3D 旋转（已移除 3DGS）</div>
+    <div class="item"><span class="ok">✓</span>缓动统一 <b>cubic-bezier(0.16,1,0.3,1)</b></div>
+    <div class="item"><span class="x">✗</span>不做弹跳/回弹（非游戏化）</div>
+    <div class="item"><span class="ok">✓</span>prefers-reduced-motion 全部降级为<strong>渐显</strong></div>
+    <div class="item"><span class="x">✗</span>不做粒子/光效（黑白无彩）</div>
+  </div>
+</div>
+</body>
+</html>

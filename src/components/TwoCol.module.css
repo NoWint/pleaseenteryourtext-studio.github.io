@@ -1,0 +1,26 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  max-width: var(--container-wide);
+  margin: 0 auto;
+}
+.col {
+  padding: var(--space-4);
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.15em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+}
+.text {
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; gap: var(--space-3); }
+}

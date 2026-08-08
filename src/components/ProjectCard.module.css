@@ -1,0 +1,109 @@
+.card {
+  flex: 0 0 80vw;
+  max-width: 800px;
+  scroll-snap-align: center;
+}
+.cardBorder {
+  height: 100%;
+}
+.cardBody {
+  padding: var(--space-5);
+  background: var(--surface-elevated);
+  border-radius: 12px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-headline);
+  font-weight: 700;
+}
+.flagship {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(131, 56, 236, 0.2);
+  color: var(--prism-2);
+  border: 1px solid rgba(131, 56, 236, 0.3);
+}
+.tagline {
+  font-size: var(--text-body);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+.description {
+  font-size: var(--text-caption);
+  color: var(--text-tertiary);
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+}
+.capabilities {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.capGroup {}
+.capLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.capItems {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.capItem {
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.highlight {
+  margin-bottom: var(--space-3);
+  padding: var(--space-2);
+  border-left: 2px solid var(--prism-2);
+  background: rgba(131, 56, 236, 0.05);
+}
+.highlightLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--prism-2);
+}
+.highlightText {
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--hairline);
+}
+.techStack {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.githubLink {
+  font-size: var(--text-caption);
+  color: var(--text-primary);
+  transition: color var(--duration-fast) var(--ease-apple);
+}
+.githubLink:hover { color: var(--prism-3); }

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 字体定稿</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'SF Mono',monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  .stage{max-width:1320px;margin:0 auto;position:relative;border:1px solid #1f1f1f;overflow:hidden}
+  .mock{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000}
+
+  /* B 骨架 */
+  .b-bg{position:absolute;inset:0;background:#fff}
+  .b-slice{position:absolute;top:0;left:0;width:62%;height:100%;background:#000;clip-path:polygon(0 0,100% 0,68% 100%,0 100%)}
+  .b-slice2{position:absolute;top:0;left:0;width:44%;height:100%;background:#0c0c0c;clip-path:polygon(0 0,100% 0,58% 100%,0 100%);opacity:.6}
+  .b-slice3{position:absolute;right:0;bottom:0;width:40%;height:60%;background:#e8e8e8;clip-path:polygon(20% 0,100% 0,100% 100%,0 100%)}
+
+  /* A HUD 层 */
+  .a-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+  .a-grid-w{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;mix-blend-mode:multiply}
+  .a-scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 4px);pointer-events:none}
+
+  .corner{position:absolute;width:30px;height:30px;border:2px solid #fff}
+  .c-tl{top:18px;left:18px;border-right:0;border-bottom:0}
+  .c-bl{bottom:18px;left:18px;border-right:0;border-top:0}
+  .c-br{bottom:18px;right:18px;border-left:0;border-top:0;border-color:#000}
+  .c-tr{top:18px;right:18px;border-left:0;border-bottom:0;border-color:#000}
+
+  .topbar{position:absolute;top:20px;left:60px;right:60px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.25em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+  .topbar .l{color:#888}
+  .topbar .l b{color:#fff}
+  .topbar .live{display:flex;align-items:center;gap:6px;color:#fff}
+  .topbar .live .dot{width:7px;height:7px;background:#fff;border-radius:50%;animation:blip 1.4s infinite}
+  .topbar .r{color:#000}
+  .topbar .r .live{color:#000}
+  .topbar .r .live .dot{background:#000}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* === 极致张力标题：Inter 900 超大 + 紧字距 + 描边镂空 === */
+  .title{position:absolute;left:60px;top:34%;transform:translateY(-50%)}
+  .title .pre{font-size:11px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace}
+  .title .pre::before{content:'';width:22px;height:1px;background:#fff}
+  .title h2{font-family:'Inter',-apple-system,sans-serif;font-weight:900;font-size:104px;letter-spacing:-.05em;line-height:.84}
+  .title h2 .out{-webkit-text-stroke:2.5px #fff;color:transparent;font-weight:900}
+  .title .sub{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:12px;letter-spacing:.22em;color:#bbb;margin-top:18px;text-transform:uppercase}
+
+  /* 右上章戳 */
+  .stamp{position:absolute;right:60px;top:60px;text-align:right;font-family:'JetBrains Mono',monospace}
+  .stamp .lbl{font-size:10px;letter-spacing:.2em;color:#000;text-transform:uppercase;opacity:.6}
+  .stamp .big{font-family:'Inter',sans-serif;font-size:48px;font-weight:900;letter-spacing:-.03em;line-height:1;color:#000;margin-top:4px}
+  .stamp .blk{background:#000;color:#fff;padding:3px 8px;display:inline-block;margin-top:8px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+
+  /* 右下数据表（JetBrains 正文） */
+  .data-r{position:absolute;right:60px;bottom:60px;width:30%}
+  .data-r .lbl{font-size:9px;letter-spacing:.25em;color:#000;text-transform:uppercase;margin-bottom:10px;opacity:.6;font-family:'JetBrains Mono',monospace}
+  .data-r .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.25);font-size:11px;letter-spacing:.15em;color:#000;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+  .data-r .row b{font-weight:700}
+  .data-r .row:last-child{border-bottom:0}
+
+  /* 左下 HUD */
+  .hud-bl{position:absolute;left:60px;bottom:60px}
+  .hud-bl .bar{width:150px;margin-bottom:10px}
+  .hud-bl .bar .lbl{font-size:9px;letter-spacing:.2em;color:#888;text-transform:uppercase;margin-bottom:5px;font-family:'JetBrains Mono',monospace}
+  .hud-bl .bar .track{height:2px;background:#222;position:relative}
+  .hud-bl .bar .fill{position:absolute;left:0;top:0;height:100%;width:72%;background:#fff}
+  .hud-bl .tickrow{display:flex;gap:4px}
+  .hud-bl .tickrow i{display:block;width:3px;height:10px;background:#333}
+  .hud-bl .tickrow i.on{background:#fff}
+
+  /* CTA */
+  .cta{position:absolute;right:60px;bottom:18px;background:#000;color:#fff;padding:10px 24px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,100% 0,90% 100%,0 100%);font-family:'JetBrains Mono',monospace}
+
+  .coord{position:absolute;left:60px;bottom:24px;font-size:9px;color:#666;letter-spacing:.2em;font-family:'JetBrains Mono',monospace}
+  .coord b{color:#fff}
+
+  /* 选项条 */
+  .confirm{max-width:1320px;margin:20px auto 0;display:flex;gap:14px;justify-content:flex-end}
+  .btn{padding:12px 28px;border:1px solid #fff;background:transparent;color:#fff;font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s}
+  .btn:hover{background:#fff;color:#000}
+  .btn.primary{background:#fff;color:#000}
+  .btn.primary:hover{background:transparent;color:#fff}
+
+  /* 字体规格说明 */
+  .spec{max-width:1320px;margin:18px auto 0;border:1px solid #1f1f1f;padding:16px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .spec .item .k{font-size:9px;letter-spacing:.25em;color:#666;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px}
+  .spec .item .v{font-size:12px;color:#fff;letter-spacing:.02em}
+  .spec .item .v b{font-weight:700}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 字体定稿</h1>
+  <span class="tag">极致张力 · Inter 900 × JetBrains Mono</span>
+  <span class="line"></span>
+  <span class="note">确认 →</span>
+</div>
+
+<div class="stage">
+  <div class="mock">
+    <div class="b-bg"></div>
+    <div class="b-slice3"></div>
+    <div class="b-slice"></div>
+    <div class="b-slice2"></div>
+
+    <div class="a-grid"></div>
+    <div class="a-grid-w"></div>
+    <div class="a-scan"></div>
+
+    <div class="corner c-tl"></div><div class="corner c-bl"></div>
+    <div class="corner c-tr"></div><div class="corner c-br"></div>
+
+    <div class="topbar">
+      <span class="l">PEYT-SYS // v2.6 // <b>SECT 04</b></span>
+      <span class="live"><i class="dot"></i>LIVE</span>
+      <span class="r"><span class="live"><i class="dot"></i>SYNC</span></span>
+    </div>
+
+    <div class="title">
+      <div class="pre">// 00 — DESIGNATION</div>
+      <h2>TYPE<br><span class="out">EVERY</span>THING</h2>
+      <div class="sub">// PEYT Studio · 请输入文本工作室</div>
+    </div>
+
+    <div class="stamp">
+      <div class="lbl">EST</div>
+      <div class="big">2026</div>
+      <div class="blk">PEYT // 08</div>
+    </div>
+
+    <div class="data-r">
+      <div class="lbl">// UNIT READOUT</div>
+      <div class="row"><span>PROJECT</span><b>PEYT-CHAT</b></div>
+      <div class="row"><span>STATUS</span><b>OPEN SOURCE</b></div>
+      <div class="row"><span>MEMBERS</span><b>08</b></div>
+    </div>
+
+    <div class="hud-bl">
+      <div class="bar">
+        <div class="lbl">SYNC</div>
+        <div class="track"><div class="fill"></div></div>
+      </div>
+      <div class="tickrow"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    </div>
+
+    <div class="cta">加入 →</div>
+    <div class="coord">LAT <b>00.00</b> · LNG <b>00.00</b> // <b>PEYT-HQ</b></div>
+  </div>
+</div>
+
+<div class="spec">
+  <div class="item"><div class="k">DISPLAY</div><div class="v"><b>Inter 900</b> · -.05em 字距 · 描边镂空</div></div>
+  <div class="item"><div class="k">SUBHEAD</div><div class="v"><b>Inter 200</b> · 极细斜体反差</div></div>
+  <div class="item"><div class="k">BODY / DATA</div><div class="v"><b>JetBrains Mono 400/500</b> · 等宽对齐</div></div>
+  <div class="item"><div class="k">LABEL / HUD</div><div class="v"><b>JetBrains Mono 700</b> · .25em 字距 · 全大写</div></div>
+</div>
+
+<div class="confirm">
+  <button class="btn" onclick="toggleSelect(this)">再调</button>
+  <button class="btn primary" onclick="toggleSelect(this)">确认字体</button>
+</div>
+</body>
+</html>

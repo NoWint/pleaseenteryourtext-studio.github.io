@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 导航交互</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'JetBrains Mono',monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1320px;margin:0 auto}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr}}
+
+  .card{position:relative;background:#000;border:1px solid #1f1f1f;cursor:pointer;transition:border-color .25s;overflow:hidden}
+  .card:hover{border-color:#555}
+  .card.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+  .card-head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #1f1f1f;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888}
+  .card-head .id{color:#fff}
+  .pickflag{position:absolute;top:-1px;right:-1px;background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+  .card.selected .pickflag{opacity:1}
+
+  .mock{position:relative;width:100%;aspect-ratio:8/5;overflow:hidden;background:#000}
+  .scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 4px);pointer-events:none}
+
+  .card-foot{padding:13px 14px;border-top:1px solid #1f1f1f}
+  .card-foot h3{font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:4px;font-family:'Inter',sans-serif}
+  .card-foot p{font-size:10.5px;color:#888;line-height:1.5;letter-spacing:.02em;font-family:'Inter',sans-serif}
+
+  /* === A: 顶部 HUD 条 === */
+  .a-mock{padding:0}
+  .a-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-bottom:1px solid #2a2a2a;background:rgba(0,0,0,.85);backdrop-filter:blur(8px)}
+  .a-logo{font-family:'Inter',sans-serif;font-weight:900;font-size:14px;letter-spacing:.02em}
+  .a-nav{display:flex;gap:18px}
+  .a-nav span{font-size:9px;letter-spacing:.2em;color:#666;text-transform:uppercase;cursor:pointer;position:relative;padding-bottom:3px}
+  .a-nav span.on{color:#fff}
+  .a-nav span.on::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:#fff}
+  .a-nav span:hover{color:#fff}
+  .a-meta{font-size:9px;letter-spacing:.2em;color:#666;text-transform:uppercase}
+  .a-meta b{color:#fff}
+  .a-center{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center}
+  .a-center .pre{font-size:8px;letter-spacing:.3em;color:#666;text-transform:uppercase;margin-bottom:6px}
+  .a-center h4{font-family:'Inter',sans-serif;font-weight:900;font-size:32px;letter-spacing:-.03em}
+  .a-center h4 .out{-webkit-text-stroke:1.2px #fff;color:transparent}
+  .a-bottom{position:absolute;bottom:14px;left:24px;right:24px;display:flex;justify-content:space-between;font-size:8px;color:#555;letter-spacing:.2em;text-transform:uppercase}
+
+  /* === B: 侧边刻度条 === */
+  .b-mock{position:relative}
+  .b-rail{position:absolute;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0;align-items:flex-end}
+  .b-item{display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer}
+  .b-item .lbl{font-size:8px;letter-spacing:.2em;color:#555;text-transform:uppercase;opacity:0;transition:opacity .2s}
+  .b-item.on .lbl,.b-item:hover .lbl{opacity:1;color:#fff}
+  .b-item .tick{width:14px;height:1px;background:#444;transition:all .2s}
+  .b-item.on .tick{width:28px;background:#fff;height:2px}
+  .b-item:hover .tick{width:22px;background:#fff}
+  .b-item .num{font-size:8px;color:#444;font-family:'JetBrains Mono',monospace;width:18px;text-align:right}
+  .b-item.on .num{color:#fff}
+  .b-center{position:absolute;left:32px;top:50%;transform:translateY(-50%);max-width:55%}
+  .b-center .pre{font-size:8px;letter-spacing:.3em;color:#666;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .b-center .pre::before{content:'';width:16px;height:1px;background:#fff}
+  .b-center h4{font-family:'Inter',sans-serif;font-weight:900;font-size:30px;letter-spacing:-.03em;line-height:.9}
+  .b-center .sub{font-size:9px;letter-spacing:.2em;color:#888;margin-top:8px;text-transform:uppercase}
+  .b-prog{position:absolute;left:20px;bottom:20px;width:80px}
+  .b-prog .lbl{font-size:7px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-bottom:4px}
+  .b-prog .track{height:1px;background:#222;position:relative}
+  .b-prog .fill{position:absolute;left:0;top:-0.5px;height:2px;background:#fff;width:40%}
+
+  /* === C: 底部章节带 === */
+  .c-mock{position:relative}
+  .c-center{position:absolute;left:0;right:0;top:40%;transform:translateY(-50%);text-align:center}
+  .c-center .pre{font-size:8px;letter-spacing:.3em;color:#666;text-transform:uppercase;margin-bottom:6px}
+  .c-center h4{font-family:'Inter',sans-serif;font-weight:900;font-size:30px;letter-spacing:-.03em}
+  .c-center .sub{font-size:9px;letter-spacing:.2em;color:#888;margin-top:8px;text-transform:uppercase}
+  .c-bottom{position:absolute;bottom:0;left:0;right:0;background:#000;border-top:1px solid #2a2a2a}
+  .c-track{display:flex}
+  .c-seg{flex:1;padding:12px 8px;border-right:1px solid #1a1a1a;cursor:pointer;text-align:center;transition:background .2s;position:relative}
+  .c-seg:last-child{border-right:0}
+  .c-seg:hover{background:#111}
+  .c-seg.on{background:#fff;color:#000}
+  .c-seg .num{font-family:'Inter',sans-serif;font-weight:900;font-size:16px;letter-spacing:-.02em}
+  .c-seg .lbl{font-size:7px;letter-spacing:.2em;color:#666;text-transform:uppercase;margin-top:3px}
+  .c-seg.on .lbl{color:#444}
+  .c-seg .bar{position:absolute;bottom:0;left:0;height:2px;background:#fff;width:0;transition:width .3s}
+  .c-seg.on .bar{width:100%}
+
+  /* 交互细节清单 */
+  .details{max-width:1320px;margin:20px auto 0;border:1px solid #1f1f1f;padding:16px 20px}
+  .details h4{font-size:10px;letter-spacing:.25em;color:#888;text-transform:uppercase;margin-bottom:12px}
+  .d-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 28px}
+  .d-list .item{font-size:11px;color:#bbb;line-height:1.5;letter-spacing:.02em;font-family:'JetBrains Mono',monospace;display:flex;gap:8px}
+  .d-list .item .k{color:#666;min-width:90px;text-transform:uppercase;font-size:9px;letter-spacing:.15em;padding-top:2px}
+  .d-list .item .v b{color:#fff}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 导航交互</h1>
+  <span class="tag">HUD 式 · 非线性</span>
+  <span class="line"></span>
+  <span class="note">选导航方案 →</span>
+</div>
+
+<div class="grid">
+
+  <!-- A: 顶部 HUD 条 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">NAV-A</span><span>顶部 HUD 条</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock a-mock">
+      <div class="scan"></div>
+      <div class="a-top">
+        <div class="a-logo">PEYT</div>
+        <div class="a-nav">
+          <span>关于</span><span class="on">项目</span><span>团队</span><span>加入</span>
+        </div>
+        <div class="a-meta">SECT <b>02</b> // <b>ACTIVE</b></div>
+      </div>
+      <div class="a-center">
+        <div class="pre">// 02 — ARSENAL</div>
+        <h4>PROJECTS</h4>
+      </div>
+      <div class="a-bottom">
+        <span>LAT 02.00 · LNG 00.00</span>
+        <span>SCROLL <b>↓</b></span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>A · 顶部 HUD 条</h3>
+      <p>固定顶部细条：Logo + 锚点 nav + sector 读数。当前章节下划线高亮。最常规但最稳，移动端可折叠。</p>
+    </div>
+  </div>
+
+  <!-- B: 侧边刻度条 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">NAV-B</span><span>侧边刻度条</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock b-mock">
+      <div class="scan"></div>
+      <div class="b-center">
+        <div class="pre">// 02 — ARSENAL</div>
+        <h4>PROJECTS</h4>
+        <div class="sub">// 06 ITEMS</div>
+      </div>
+      <div class="b-rail">
+        <div class="b-item"><span class="lbl">HERO</span><span class="tick"></span><span class="num">00</span></div>
+        <div class="b-item"><span class="lbl">ABOUT</span><span class="tick"></span><span class="num">01</span></div>
+        <div class="b-item on"><span class="lbl">PROJECTS</span><span class="tick"></span><span class="num">02</span></div>
+        <div class="b-item"><span class="lbl">TEAM</span><span class="tick"></span><span class="num">03</span></div>
+        <div class="b-item"><span class="lbl">JOIN</span><span class="tick"></span><span class="num">04</span></div>
+      </div>
+      <div class="b-prog">
+        <div class="lbl">PROGRESS</div>
+        <div class="track"><div class="fill"></div></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>B · 侧边刻度条</h3>
+      <p>右侧垂直刻度，当前章节刻度拉长加粗，hover 展开 label。最方舟雷达式，不占顶部空间，桌面端极佳。</p>
+    </div>
+  </div>
+
+  <!-- C: 底部章节带 -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">NAV-C</span><span>底部章节带</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock c-mock">
+      <div class="scan"></div>
+      <div class="c-center">
+        <div class="pre">// 02 — ARSENAL</div>
+        <h4>PROJECTS</h4>
+        <div class="sub">// 06 ITEMS · SCROLL ↓</div>
+      </div>
+      <div class="c-bottom">
+        <div class="c-track">
+          <div class="c-seg"><div class="num">00</div><div class="lbl">HERO</div><div class="bar"></div></div>
+          <div class="c-seg"><div class="num">01</div><div class="lbl">ABOUT</div><div class="bar"></div></div>
+          <div class="c-seg on"><div class="num">02</div><div class="lbl">PROJECTS</div><div class="bar"></div></div>
+          <div class="c-seg"><div class="num">03</div><div class="lbl">TEAM</div><div class="bar"></div></div>
+          <div class="c-seg"><div class="num">04</div><div class="lbl">JOIN</div><div class="bar"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <h3>C · 底部章节带</h3>
+      <p>固定底部 5 格章节带，当前格反色高亮 + 进度条填充。最强结构感，但移动端占底部空间。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 交互细节 -->
+<div class="details">
+  <h4>// 交互细节（无论选哪个导航都适用）</h4>
+  <div class="d-list">
+    <div class="item"><span class="k">滚动进度</span><span class="v">顶部 1px 白线，<b>scaleX</b> 非线性填充</span></div>
+    <div class="item"><span class="k">锚点跳转</span><span class="v">smooth scroll + <b>scroll-margin-top</b> 避开导航</span></div>
+    <div class="item"><span class="k">卡片 hover</span><span class="v">边框 <b>#1f1f1f → #fff</b>，非线性 0.2s</span></div>
+    <div class="item"><span class="k">链接外部</span><span class="v">新标签打开，GitHub/站点统一 <b>↗</b> 角标</span></div>
+    <div class="item"><span class="k">QR 码</span><span class="v">hover 放大 1.1x，非线性格 0.3s</span></div>
+    <div class="item"><span class="k">reduced-motion</span><span class="v">所有动效降级为<b>瞬时渐显</b>，无位移</span></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+.footer {
+  padding: var(--space-5) 0;
+  text-align: center;
+  border-top: 1px solid var(--hairline);
+}
+.text {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+}
+.slogan {
+  color: var(--text-primary);
+}
+.link {
+  font-size: var(--text-caption);
+  color: var(--text-tertiary);
+  transition: color var(--duration-fast) var(--ease-apple);
+}
+.link:hover { color: var(--prism-3); }

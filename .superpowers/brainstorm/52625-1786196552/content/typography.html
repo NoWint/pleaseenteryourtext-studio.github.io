@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 字体质感</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'SF Mono',monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:1320px;margin:0 auto}
+
+  .card{position:relative;background:#000;border:1px solid #1f1f1f;cursor:pointer;transition:border-color .25s,transform .25s;overflow:hidden}
+  .card:hover{border-color:#555}
+  .card.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+  .card-head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #1f1f1f;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888}
+  .card-head .id{color:#fff}
+  .pickflag{position:absolute;top:-1px;right:-1px;background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+  .card.selected .pickflag{opacity:1}
+
+  .mock{position:relative;width:100%;aspect-ratio:8/5;overflow:hidden;background:#000;padding:32px 36px;display:flex;flex-direction:column;justify-content:space-between}
+
+  /* 共享 HUD 装饰 */
+  .corner{position:absolute;width:22px;height:22px;border:1.5px solid #fff}
+  .c-tl{top:12px;left:12px;border-right:0;border-bottom:0}
+  .c-br{bottom:12px;right:12px;border-left:0;border-top:0}
+  .scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 4px);pointer-events:none}
+  .pre{font-size:9px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:8px;font-family:'SF Mono',monospace;display:flex;align-items:center;gap:7px}
+  .pre::before{content:'';width:18px;height:1px;background:#fff}
+  .meta-row{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.2em;color:#666;text-transform:uppercase;font-family:'SF Mono',monospace}
+
+  /* === A: Inter 工业反差 === */
+  .a-title{font-family:'Inter',-apple-system,sans-serif;font-weight:900;font-size:62px;letter-spacing:-.04em;line-height:.88}
+  .a-title .thin{font-weight:200;font-style:italic}
+  .a-sub{font-family:'Inter',sans-serif;font-weight:400;font-size:13px;letter-spacing:.04em;color:#bbb;margin-top:10px;line-height:1.4}
+  .a-body{font-family:'Inter',sans-serif;font-weight:400;font-size:11px;color:#999;line-height:1.6;letter-spacing:.02em;max-width:75%}
+
+  /* === B: JetBrains Mono 全等宽 === */
+  .b-title{font-family:'JetBrains Mono','SF Mono',monospace;font-weight:800;font-size:50px;letter-spacing:-.02em;line-height:.92}
+  .b-title .thin{font-weight:200}
+  .b-sub{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:12px;letter-spacing:.06em;color:#bbb;margin-top:10px}
+  .b-body{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:10.5px;color:#999;line-height:1.7;letter-spacing:.02em;max-width:80%}
+
+  /* === C: 混合 Inter 标题 + JetBrains 正文 === */
+  .c-title{font-family:'Inter',-apple-system,sans-serif;font-weight:900;font-size:62px;letter-spacing:-.04em;line-height:.88}
+  .c-title .out{-webkit-text-stroke:1.5px #fff;color:transparent;font-weight:900}
+  .c-sub{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;letter-spacing:.18em;color:#bbb;margin-top:10px;text-transform:uppercase}
+  .c-body{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:10.5px;color:#999;line-height:1.7;letter-spacing:.02em;max-width:78%}
+
+  /* 标签 */
+  .tagline{position:absolute;bottom:14px;right:36px;font-size:8px;letter-spacing:.25em;color:#444;text-transform:uppercase;font-family:'SF Mono',monospace}
+
+  .card-foot{padding:13px 14px;border-top:1px solid #1f1f1f}
+  .card-foot h3{font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:4px;font-family:'Inter',sans-serif}
+  .card-foot p{font-size:10.5px;color:#888;line-height:1.5;letter-spacing:.02em;font-family:'Inter',sans-serif}
+
+  /* 字重对照条 */
+  .weights{max-width:1320px;margin:20px auto 0;border:1px solid #1f1f1f;padding:16px 20px;display:flex;gap:28px;align-items:baseline;flex-wrap:wrap}
+  .weights .lbl{font-size:9px;letter-spacing:.25em;color:#666;text-transform:uppercase;font-family:'SF Mono',monospace}
+  .weights span{font-family:'Inter',sans-serif}
+  .w100{font-weight:100;font-size:22px}
+  .w200{font-weight:200;font-size:22px}
+  .w400{font-weight:400;font-size:22px}
+  .w700{font-weight:700;font-size:22px}
+  .w900{font-weight:900;font-size:22px}
+  .w-num{font-size:9px;color:#555;margin-left:4px;font-family:'SF Mono',monospace}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 字体质感</h1>
+  <span class="tag">明日方舟 · 工业反差</span>
+  <span class="line"></span>
+  <span class="note">选字体方案 →</span>
+</div>
+
+<div class="grid">
+
+  <!-- A: Inter 工业反差 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">FONT-A</span><span>INTER 工业反差</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="scan"></div>
+      <div class="corner c-tl"></div><div class="corner c-br"></div>
+      <div>
+        <div class="pre">// 00 — DESIGNATION</div>
+        <div class="a-title">TYPE<br><span class="thin">Everything</span></div>
+        <div class="a-sub">PEYT Studio · 请输入文本工作室</div>
+      </div>
+      <div>
+        <div class="a-body">由中学生开发者组成。一次研学相遇，因热爱技术走到一起。我们构建真实可用的软件。</div>
+        <div class="meta-row" style="margin-top:10px"><span>SECT 04</span><span>STATUS · ACTIVE</span></div>
+      </div>
+      <div class="tagline">INTER · 900/200</div>
+    </div>
+    <div class="card-foot">
+      <h3>A · Inter 工业反差</h3>
+      <p>标题 Inter 900 超重 + 副标 Inter 200 极细斜体。反差最极端，最接近方舟标题字的视觉张力。可读性好。</p>
+    </div>
+  </div>
+
+  <!-- B: JetBrains Mono 全等宽 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">FONT-B</span><span>JETBRAINS 全等宽</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="scan"></div>
+      <div class="corner c-tl"></div><div class="corner c-br"></div>
+      <div>
+        <div class="pre">// 00 — DESIGNATION</div>
+        <div class="b-title">TYPE<br><span class="thin">EVERYTHING</span></div>
+        <div class="b-sub">// PEYT Studio · 请输入文本工作室</div>
+      </div>
+      <div>
+        <div class="b-body">由中学生开发者组成。一次研学相遇，因热爱技术走到一起。我们构建真实可用的软件。</div>
+        <div class="meta-row" style="margin-top:10px"><span>SECT 04</span><span>STATUS · ACTIVE</span></div>
+      </div>
+      <div class="tagline">JETBRAINS · 800/200</div>
+    </div>
+    <div class="card-foot">
+      <h3>B · JetBrains 全等宽</h3>
+      <p>全站等宽字体，最"终端/技术"质感。每个字符等宽，信息列对齐整齐。但标题张力弱于无衬线，中文兼容需配等宽中文。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 字重对照 -->
+<div class="weights">
+  <span class="lbl">INTER 字重对照</span>
+  <span class="w100">Aa<span class="w-num">100</span></span>
+  <span class="w200">Aa<span class="w-num">200</span></span>
+  <span class="w400">Aa<span class="w-num">400</span></span>
+  <span class="w700">Aa<span class="w-num">700</span></span>
+  <span class="w900">Aa<span class="w-num">900</span></span>
+  <span class="lbl" style="margin-left:auto">反差 = 900 vs 200</span>
+</div>
+</body>
+</html>

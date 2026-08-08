@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 板块结构</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'JetBrains Mono',monospace;padding:28px 24px}
+  .page-head{max-width:1320px;margin:0 auto 22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .page-head .note{font-size:11px;color:#fff;letter-spacing:.15em}
+
+  /* 滚动条结构：纵向排列的 section 卡片 */
+  .flow{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+  .sec{position:relative;border:1px solid #1f1f1f;overflow:hidden;cursor:pointer;transition:border-color .25s}
+  .sec:hover{border-color:#555}
+  .sec.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+  .sec-body{display:grid;grid-template-columns:120px 1fr 200px;gap:0;min-height:130px}
+
+  /* 左侧编号区 */
+  .sec-num{display:flex;flex-direction:column;justify-content:space-between;padding:16px;border-right:1px solid #1f1f1f;background:#000}
+  .sec-num .big{font-family:'Inter',sans-serif;font-weight:900;font-size:48px;line-height:.9;letter-spacing:-.04em}
+  .sec-num .lbl{font-size:9px;letter-spacing:.25em;color:#666;text-transform:uppercase}
+  .sec-num .coord{font-size:8px;color:#444;letter-spacing:.15em}
+
+  /* 中间内容区 */
+  .sec-main{padding:16px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .sec-main .role{font-size:9px;letter-spacing:.25em;color:#888;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .sec-main .role::before{content:'';width:14px;height:1px;background:#555}
+  .sec-main h3{font-family:'Inter',sans-serif;font-weight:900;font-size:24px;letter-spacing:-.02em;line-height:1}
+  .sec-main h3 .en{font-weight:200;font-style:italic;color:#999}
+  .sec-main .desc{font-size:11px;color:#999;line-height:1.5;letter-spacing:.02em;max-width:90%}
+  .sec-main .desc b{color:#fff;font-weight:700}
+
+  /* 右侧视觉/咬合指示 */
+  .sec-vis{padding:16px;border-left:1px solid #1f1f1f;display:flex;flex-direction:column;justify-content:space-between;background:#0c0c0c}
+  .sec-vis .mode{font-size:9px;letter-spacing:.2em;color:#888;text-transform:uppercase;margin-bottom:8px}
+  .sec-vis .chip{font-size:9px;letter-spacing:.1em;padding:2px 6px;border:1px solid #333;color:#bbb;display:inline-block;margin:2px 0;text-transform:uppercase}
+  .sec-vis .accent{color:#fff;border-color:#fff}
+
+  /* 交替深浅：奇数深、偶数浅 */
+  .sec.light .sec-num{background:#fff;color:#000;border-right-color:#ddd}
+  .sec.light .sec-num .lbl{color:#888}
+  .sec.light .sec-num .coord{color:#888}
+  .sec.light .sec-main{background:#fff;color:#000}
+  .sec.light .sec-main .role{color:#666}
+  .sec.light .sec-main .role::before{background:#999}
+  .sec.light .sec-main h3 .en{color:#666}
+  .sec.light .sec-main .desc{color:#444}
+  .sec.light .sec-main .desc b{color:#000}
+  .sec.light .sec-vis{background:#f4f4f4;border-left-color:#ddd}
+  .sec.light .sec-vis .mode{color:#666}
+  .sec.light .sec-vis .chip{border-color:#999;color:#444}
+  .sec.light .sec-vis .accent{color:#000;border-color:#000}
+
+  /* pickflag */
+  .pickflag{position:absolute;top:-1px;right:-1px;background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+  .sec.selected .pickflag{opacity:1}
+
+  /* 节奏图例 */
+  .rhythm{max-width:1320px;margin:20px auto 0;border:1px solid #1f1f1f;padding:16px 20px}
+  .rhythm h4{font-size:10px;letter-spacing:.25em;color:#888;text-transform:uppercase;margin-bottom:12px}
+  .rhythm-bar{display:flex;height:32px;border:1px solid #333}
+  .rhythm-bar div{flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
+  .rhythm-bar .d{background:#000;color:#fff}
+  .rhythm-bar .l{background:#fff;color:#000}
+  .rhythm-note{display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:#666;letter-spacing:.15em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 板块结构</h1>
+  <span class="tag">5 SECTORS · 深浅交替咬合</span>
+  <span class="line"></span>
+  <span class="note">确认编排 →</span>
+</div>
+
+<div class="flow">
+
+  <!-- SECTOR 00 HERO -->
+  <div class="sec" data-choice="s00" onclick="toggleSelect(this)">
+    <span class="pickflag">已选</span>
+    <div class="sec-body">
+      <div class="sec-num">
+        <div class="lbl">// SECTOR</div>
+        <div class="big">00</div>
+        <div class="coord">LAT 00.00</div>
+      </div>
+      <div class="sec-main">
+        <div class="role">ENTRY POINT · 全屏首屏</div>
+        <h3>HERO <span class="en">/ designation</span></h3>
+        <div class="desc">PEYT Studio 标识 + <b>TYPE EVERYTHING</b> 镂空标题 + 副标 + 加入 CTA。战术 HUD 框架全开（扫描线/四角/数据读出）。向下滚动触发斜切开场。</div>
+      </div>
+      <div class="sec-vis">
+        <div class="mode">// MODE</div>
+        <div><span class="chip accent">深底</span><span class="chip">斜切骨架</span><span class="chip">HUD 全开</span></div>
+        <div class="coord" style="font-size:8px;color:#444;letter-spacing:.15em">100vh · fixed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 01 ABOUT -->
+  <div class="sec light" data-choice="s01" onclick="toggleSelect(this)">
+    <span class="pickflag">已选</span>
+    <div class="sec-body">
+      <div class="sec-num">
+        <div class="lbl">// SECTOR</div>
+        <div class="big">01</div>
+        <div class="coord">LNG 01.00</div>
+      </div>
+      <div class="sec-main">
+        <div class="role">MANIFESTO · 工作室宣言</div>
+        <h3>ABOUT <span class="en">/ 我们是谁</span></h3>
+        <div class="desc">白底反色呼吸。<b>「中学生开发者，因研学相遇，因技术走到一起」</b>。两栏咬合：左实心黑块放核心信条，右白底放展开叙事。斜切接缝处放坐标/编号。</div>
+      </div>
+      <div class="sec-vis">
+        <div class="mode">// MODE</div>
+        <div><span class="chip accent">白底</span><span class="chip">两栏咬合</span><span class="chip">反色 HUD</span></div>
+        <div class="coord" style="font-size:8px;color:#888;letter-spacing:.15em">auto · manifesto</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 02 PROJECTS -->
+  <div class="sec" data-choice="s02" onclick="toggleSelect(this)">
+    <span class="pickflag">已选</span>
+    <div class="sec-body">
+      <div class="sec-num">
+        <div class="lbl">// SECTOR</div>
+        <div class="big">02</div>
+        <div class="coord">LAT 02.00</div>
+      </div>
+      <div class="sec-main">
+        <div class="role">ARSENAL · 项目阵列</div>
+        <h3>PROJECTS <span class="en">/ 06 项</span></h3>
+        <div class="desc">深底回归。<b>PEYT Chat 旗舰</b> 占大块斜切主位，其余 5 项横向滚动卡片阵列。每张卡 = 编号 + 名称 + 一句 tagline + tech stack + GitHub。卡片本身是小斜切单元。</div>
+      </div>
+      <div class="sec-vis">
+        <div class="mode">// MODE</div>
+        <div><span class="chip accent">深底</span><span class="chip">1 旗舰 + 5 阵列</span><span class="chip">横滚</span></div>
+        <div class="coord" style="font-size:8px;color:#444;letter-spacing:.15em">auto · carousel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 03 TEAM -->
+  <div class="sec light" data-choice="s03" onclick="toggleSelect(this)">
+    <span class="pickflag">已选</span>
+    <div class="sec-body">
+      <div class="sec-num">
+        <div class="lbl">// SECTOR</div>
+        <div class="big">03</div>
+        <div class="coord">LNG 03.00</div>
+      </div>
+      <div class="sec-main">
+        <div class="role">PERSONNEL · 成员名册</div>
+        <h3>TEAM <span class="en">/ 06 人</span></h3>
+        <div class="desc">白底。<b>2 联合创始人 + 4 核心</b>。成员卡 = 头像（黑白处理）+ 编号 + 名字 + 方向 + tagline + 站点。卡片网格但每张卡内部有斜切角和 HUD 编号，避免规整无聊。</div>
+      </div>
+      <div class="sec-vis">
+        <div class="mode">// MODE</div>
+        <div><span class="chip accent">白底</span><span class="chip">6 卡网格</span><span class="chip">黑白头像</span></div>
+        <div class="coord" style="font-size:8px;color:#888;letter-spacing:.15em">auto · roster</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR 04 JOIN -->
+  <div class="sec" data-choice="s04" onclick="toggleSelect(this)">
+    <span class="pickflag">已选</span>
+    <div class="sec-body">
+      <div class="sec-num">
+        <div class="lbl">// SECTOR</div>
+        <div class="big">04</div>
+        <div class="coord">LAT 04.00</div>
+      </div>
+      <div class="sec-main">
+        <div class="role">RECRUIT · 加入 + 收尾</div>
+        <h3>JOIN <span class="en">/ 入队</span></h3>
+        <div class="desc">深底收尾。<b>QQ 群二维码</b> + GitHub 组织入口 + 联系方式。斜切大 CTA。Footer 合并到此：版权 / 备案 / 坐标封口。HUD 框架收束，呼应 Sector 00 形成闭环。</div>
+      </div>
+      <div class="sec-vis">
+        <div class="mode">// MODE</div>
+        <div><span class="chip accent">深底</span><span class="chip">QR + CTA</span><span class="chip">闭环</span></div>
+        <div class="coord" style="font-size:8px;color:#444;letter-spacing:.15em">auto · footer merge</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 节奏图例 -->
+<div class="rhythm">
+  <h4>// 深浅交替节奏</h4>
+  <div class="rhythm-bar">
+    <div class="d">00 深</div>
+    <div class="l">01 浅</div>
+    <div class="d">02 深</div>
+    <div class="l">03 浅</div>
+    <div class="d">04 深</div>
+  </div>
+  <div class="rhythm-note">
+    <span>HERO 压场 → ABOUT 喘息 → PROJECTS 压回 → TEAM 喘息 → JOIN 收束</span>
+    <span>深浅 = 视觉呼吸 · 斜切 = 板块接缝</span>
+  </div>
+</div>
+</body>
+</html>

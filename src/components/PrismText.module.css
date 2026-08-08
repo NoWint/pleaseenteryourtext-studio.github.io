@@ -1,0 +1,12 @@
+.prism {
+  background: var(--prism-gradient);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: prismShift 6s ease-in-out infinite;
+}
+@keyframes prismShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

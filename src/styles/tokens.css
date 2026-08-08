@@ -1,0 +1,49 @@
+:root {
+  --canvas: transparent;
+  --surface-elevated: rgba(10, 10, 12, 0.65);
+  --surface-2: #1C1C1E;
+  --hairline: rgba(255, 255, 255, 0.08);
+
+  --prism-1: #FF006E;
+  --prism-2: #8338EC;
+  --prism-3: #3A86FF;
+  --prism-gradient: linear-gradient(90deg, var(--prism-1), var(--prism-2), var(--prism-3));
+
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1A6;
+  --text-tertiary: #6E6E73;
+
+  --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  --font-text: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-hero: 96px;
+  --text-display: 72px;
+  --text-title: 48px;
+  --text-headline: 32px;
+  --text-body: 17px;
+  --text-caption: 14px;
+
+  --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 32px;
+  --space-5: 48px; --space-6: 64px; --space-7: 96px;
+
+  --container-wide: 1440px;
+  --container-narrow: 760px;
+
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-slow: 0.8s;
+  --duration-medium: 0.4s;
+  --duration-fast: 0.2s;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 1024px) {
+  :root { --text-hero: 64px; --text-display: 48px; --text-title: 36px; }
+}
+@media (max-width: 768px) {
+  :root { --text-hero: 48px; --text-display: 36px; --text-title: 28px; --text-headline: 24px; }
+}
+@media (max-width: 640px) {
+  :root { --text-hero: 36px; --text-display: 28px; }
+}

@@ -1,0 +1,17 @@
+.about {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-6);
+}
+.titleEn {
+  font-size: var(--text-headline);
+  color: var(--text-tertiary);
+  font-weight: 400;
+}

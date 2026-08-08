@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEYT · 设计方向</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'SF Mono','JetBrains Mono',ui-monospace,monospace;padding:32px 24px}
+  .page-head{max-width:1320px;margin:0 auto 28px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+  .page-head .tag{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase}
+  .page-head .line{flex:1;height:1px;background:#2a2a2a;min-width:40px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1320px;margin:0 auto}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr}}
+
+  .card{position:relative;background:#000;border:1px solid #1f1f1f;cursor:pointer;transition:border-color .25s,transform .25s}
+  .card:hover{border-color:#fff}
+  .card.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+  .card-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid #1f1f1f;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888}
+  .card-head .id{color:#fff}
+  .pickflag{position:absolute;top:-1px;right:-1px;background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+  .card.selected .pickflag{opacity:1}
+
+  /* mockup frame: 8/5 aspect */
+  .mock{position:relative;width:100%;aspect-ratio:8/5;overflow:hidden;background:#000}
+
+  /* ===== shared arknights tokens ===== */
+  .brk-mono{font-family:'SF Mono','JetBrains Mono',ui-monospace,monospace}
+  .lbl{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:#666}
+
+  /* ===== DIRECTION A: TACTICAL HUD ===== */
+  .a-scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 3px);pointer-events:none}
+  .a-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px}
+  .a-slash{position:absolute;top:0;right:0;width:60%;height:100%;background:#0c0c0c;clip-path:polygon(34% 0,100% 0,100% 100%,0 100%)}
+  .a-slash2{position:absolute;top:0;right:0;width:48%;height:100%;background:repeating-linear-gradient(135deg,#111 0,#111 6px,#0a0a0a 6px,#0a0a0a 12px);clip-path:polygon(46% 0,100% 0,100% 100%,0 100%);opacity:.6}
+  .a-corner{position:absolute;width:26px;height:26px;border:2px solid #fff}
+  .a-c-tl{top:14px;left:14px;border-right:0;border-bottom:0}
+  .a-c-tr{top:14px;right:14px;border-left:0;border-bottom:0}
+  .a-c-bl{bottom:14px;left:14px;border-right:0;border-top:0}
+  .a-c-br{bottom:14px;right:14px;border-left:0;border-top:0}
+  .a-topbar{position:absolute;top:14px;left:50px;right:50px;display:flex;justify-content:space-between;align-items:center;font-size:8px;letter-spacing:.25em;color:#888;text-transform:uppercase}
+  .a-topbar .live{display:flex;align-items:center;gap:5px;color:#fff}
+  .a-topbar .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blip 1.4s infinite}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+  .a-title{position:absolute;left:50px;top:38%;transform:translateY(-50%)}
+  .a-title .pre{font-size:9px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:6px}
+  .a-title h2{font-size:54px;font-weight:900;letter-spacing:-.02em;line-height:.9;font-family:'SF Pro Display',-apple-system,sans-serif}
+  .a-title .sub{font-size:9px;letter-spacing:.25em;color:#bbb;margin-top:8px;text-transform:uppercase}
+  .a-readout{position:absolute;right:50px;bottom:50px;text-align:right;font-size:8px;letter-spacing:.15em;color:#888;line-height:1.8;text-transform:uppercase}
+  .a-readout b{color:#fff;font-weight:700}
+  .a-bar{position:absolute;left:50px;bottom:50px;width:120px}
+  .a-bar .lbl{margin-bottom:4px}
+  .a-bar .track{height:2px;background:#222;position:relative}
+  .a-bar .fill{position:absolute;left:0;top:0;height:100%;width:68%;background:#fff}
+  .a-tickrow{position:absolute;left:50px;bottom:30px;display:flex;gap:3px}
+  .a-tickrow i{display:block;width:2px;height:8px;background:#333}
+  .a-tickrow i.on{background:#fff}
+
+  /* ===== DIRECTION B: BRUTALIST SLICE ===== */
+  .b-bg{position:absolute;inset:0;background:#fff}
+  .b-slice{position:absolute;top:0;left:0;width:58%;height:100%;background:#000;clip-path:polygon(0 0,100% 0,72% 100%,0 100%)}
+  .b-slice2{position:absolute;top:0;left:0;width:42%;height:100%;background:#111;clip-path:polygon(0 0,100% 0,62% 100%,0 100%);opacity:.5}
+  .b-htext{position:absolute;top:20%;left:8%;color:#fff;font-family:'SF Pro Display',-apple-system,sans-serif}
+  .b-htext .code{font-size:9px;letter-spacing:.3em;color:#888;font-family:'SF Mono',monospace;text-transform:uppercase;margin-bottom:10px}
+  .b-htext h2{font-size:62px;font-weight:900;line-height:.85;letter-spacing:-.03em}
+  .b-htext h2 .out{-webkit-text-stroke:1.5px #fff;color:transparent}
+  .b-vline{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#000;opacity:.15}
+  .b-meta{position:absolute;right:18px;top:18px;text-align:right;font-size:8px;letter-spacing:.2em;color:#000;text-transform:uppercase;line-height:1.8}
+  .b-meta b{background:#000;color:#fff;padding:1px 4px}
+  .b-grid-r{position:absolute;right:6%;bottom:14%;width:34%}
+  .b-grid-r .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #000;font-size:8px;letter-spacing:.15em;color:#000;text-transform:uppercase;font-family:'SF Mono',monospace}
+  .b-grid-r .row b{font-weight:700}
+  .b-cta{position:absolute;right:18px;bottom:18px;background:#000;color:#fff;padding:8px 16px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}
+  .b-cornerblk{position:absolute;left:0;bottom:0;width:90px;height:90px;background:#000;clip-path:polygon(0 0,100% 100%,0 100%)}
+
+  /* ===== DIRECTION C: BLUEPRINT INDUSTRIAL ===== */
+  .c-bg{position:absolute;inset:0;background:#0a0a0a}
+  .c-fine{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:14px 14px}
+  .c-meas{position:absolute;inset:0}
+  .c-meas::before{content:'';position:absolute;top:0;left:0;right:0;height:18px;border-bottom:1px solid #222;background-image:repeating-linear-gradient(90deg,#333 0,#333 1px,transparent 1px,transparent 20px)}
+  .c-meas::after{content:'';position:absolute;left:0;top:0;bottom:0;width:18px;border-right:1px solid #222;background-image:repeating-linear-gradient(0deg,#333 0,#333 1px,transparent 1px,transparent 20px)}
+  .c-ring{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:180px;height:180px;border:1px solid #333;border-radius:50%}
+  .c-ring::before{content:'';position:absolute;inset:18px;border:1px dashed #444;border-radius:50%}
+  .c-ring::after{content:'';position:absolute;inset:40px;border:1px solid #222;border-radius:50%}
+  .c-cross{position:absolute;left:50%;top:50%;width:24px;height:24px;transform:translate(-50%,-50%)}
+  .c-cross::before,.c-cross::after{content:'';position:absolute;background:#fff}
+  .c-cross::before{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%)}
+  .c-cross::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%)}
+  .c-title{position:absolute;left:42px;top:50%;transform:translateY(-50%)}
+  .c-title .tag{font-size:8px;letter-spacing:.3em;color:#888;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .c-title .tag::before{content:'';width:18px;height:1px;background:#fff}
+  .c-title h2{font-size:50px;font-weight:800;letter-spacing:-.01em;line-height:.92;font-family:'SF Pro Display',-apple-system,sans-serif}
+  .c-title h2 .thin{font-weight:200}
+  .c-title .sub{font-size:9px;letter-spacing:.2em;color:#999;margin-top:10px;text-transform:uppercase;font-family:'SF Mono',monospace}
+  .c-stamp{position:absolute;right:42px;bottom:42px;border:1px solid #555;padding:6px 10px;font-size:8px;letter-spacing:.2em;color:#888;text-transform:uppercase;transform:rotate(-4deg)}
+  .c-dim{position:absolute;left:42px;bottom:42px;font-size:8px;color:#666;letter-spacing:.15em;font-family:'SF Mono',monospace;line-height:1.6}
+  .c-dim b{color:#fff}
+
+  .card-foot{padding:14px;border-top:1px solid #1f1f1f}
+  .card-foot h3{font-size:13px;font-weight:700;letter-spacing:.05em;margin-bottom:4px;font-family:'SF Pro Display',sans-serif}
+  .card-foot .meta{font-size:10px;color:#888;letter-spacing:.08em;line-height:1.5;font-family:'SF Mono',monospace}
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>PEYT // 设计方向</h1>
+  <span class="tag">明日方舟 · 解构主义 · 黑白</span>
+  <span class="line"></span>
+  <span class="tag">点选一个方向</span>
+</div>
+
+<div class="grid">
+
+  <!-- DIRECTION A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">DIR-A</span><span>TACTICAL HUD</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="a-grid"></div>
+      <div class="a-slash"></div>
+      <div class="a-slash2"></div>
+      <div class="a-scan"></div>
+      <div class="a-corner a-c-tl"></div><div class="a-corner a-c-tr"></div>
+      <div class="a-corner a-c-bl"></div><div class="a-corner a-c-br"></div>
+      <div class="a-topbar"><span>PEYT-SYS // v2.6</span><span class="live"><i class="dot"></i>LIVE</span></div>
+      <div class="a-title">
+        <div class="pre">// DESIGNATION</div>
+        <h2>PEYT<br>STUDIO</h2>
+        <div class="sub">Type Everything</div>
+      </div>
+      <div class="a-readout">
+        <div>SECT <b>04</b> // STATUS <b>ACTIVE</b></div>
+        <div>UNIT <b>08</b> // PROJ <b>PEYT-CHAT</b></div>
+      </div>
+      <div class="a-bar"><div class="lbl">SYNC</div><div class="track"><div class="fill"></div></div></div>
+      <div class="a-tickrow"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    </div>
+    <div class="card-foot">
+      <h3>A · 战术 HUD</h3>
+      <p class="meta">深底 + 扫描线 + 四角标记 + 单色数据读出。最"明日方舟"战斗界面，沉浸感强，信息密度高。</p>
+    </div>
+  </div>
+
+  <!-- DIRECTION B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">DIR-B</span><span>BRUTALIST SLICE</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="b-bg"></div>
+      <div class="b-slice"></div>
+      <div class="b-slice2"></div>
+      <div class="b-vline"></div>
+      <div class="b-htext">
+        <div class="code">// 00 — PLEASE ENTER YOUR TEXT</div>
+        <h2>TYPE<br><span class="out">EVERY</span>THING</h2>
+      </div>
+      <div class="b-meta"><div><b>PEYT</b></div><div>EST. 2026</div><div>08 MEMBERS</div></div>
+      <div class="b-grid-r">
+        <div class="row"><span>PROJECT</span><b>PEYT-CHAT</b></div>
+        <div class="row"><span>STATUS</span><b>OPEN SOURCE</b></div>
+        <div class="row"><span>SECTOR</span><b>04</b></div>
+      </div>
+      <div class="b-cta">加入 →</div>
+      <div class="b-cornerblk"></div>
+    </div>
+    <div class="card-foot">
+      <h3>B · 暴力切片</h3>
+      <p class="meta">黑白对半 + 斜切 clip-path + 描边镂空字。视觉冲击最强，解构感最直白，明暗对比极端。</p>
+    </div>
+  </div>
+
+  <!-- DIRECTION C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-head"><span class="id">DIR-C</span><span>BLUEPRINT INDUSTRIAL</span></div>
+    <span class="pickflag">已选</span>
+    <div class="mock">
+      <div class="c-bg"></div>
+      <div class="c-fine"></div>
+      <div class="c-meas"></div>
+      <div class="c-ring"></div>
+      <div class="c-cross"></div>
+      <div class="c-title">
+        <div class="tag">SPEC // 00</div>
+        <h2>PLEASE<br>ENTER<br><span class="thin">YOUR TEXT</span></h2>
+        <div class="sub">// Type Everything · 请输入文本</div>
+      </div>
+      <div class="c-dim"><div>SCALE <b>1:1</b></div><div>REV <b>2026.08</b></div></div>
+      <div class="c-stamp">APPROVED // PEYT</div>
+    </div>
+    <div class="card-foot">
+      <h3>C · 蓝图工业</h3>
+      <p class="meta">技术绘图 + 细网格 + 测量刻度 + 同心圆/十字基准。冷静精密，工程感强，可读性最佳。</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
