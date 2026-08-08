@@ -1,0 +1,136 @@
+.card {
+  position: relative;
+  background: var(--ink-elevated);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+  color: var(--text-on-ink);
+  transition: border-color var(--dur-fast) var(--ease);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.card:hover {
+  border-color: var(--text-on-ink);
+}
+
+.sliceCorner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--text-on-ink);
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: 0.25em;
+  color: var(--text-on-ink-3);
+}
+.link {
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  color: var(--text-on-ink-2);
+  transition: color var(--dur-fast) var(--ease);
+}
+.link:hover {
+  color: var(--text-on-ink);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-headline);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-on-ink-2);
+  letter-spacing: 0.02em;
+}
+
+.desc {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-on-ink-2);
+  line-height: 1.6;
+}
+
+.highlight {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-on-ink);
+  line-height: 1.6;
+  border-left: 2px solid var(--text-on-ink);
+  padding-left: var(--space-2);
+}
+
+.caps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.capGroup {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-2);
+}
+.capLabel {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-on-ink-3);
+  margin-bottom: var(--space-1);
+}
+.capItems {
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-on-ink-2);
+  line-height: 1.6;
+}
+
+.tech {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-on-ink-4);
+  letter-spacing: 0.1em;
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+}
+
+/* 旗舰卡更大 */
+.flagship {
+  padding: var(--space-5);
+}
+.flagship .name {
+  font-size: var(--text-title);
+}
+
+/* 标准卡固定横滚宽度 */
+.standard {
+  min-width: 280px;
+  width: 280px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .standard {
+    min-width: 240px;
+    width: 240px;
+  }
+}

@@ -1,0 +1,75 @@
+.projects {
+  background: var(--ink-deep);
+  color: var(--text-on-ink);
+  padding: clamp(120px, 18vh, 200px) 0;
+  position: relative;
+}
+
+.head {
+  max-width: var(--container);
+  margin: 0 auto var(--space-6);
+  padding: 0 var(--space-4);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-display);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-top: var(--space-4);
+}
+.titleSub {
+  font-weight: 200;
+  font-style: italic;
+  color: var(--text-on-ink-3);
+}
+
+.body {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  display: grid;
+  grid-template-columns: 60% 40%;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.flagshipArea {
+  position: relative;
+}
+
+.restArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.restLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-on-ink-3);
+}
+
+.scrollWrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+}
+.scrollWrap::-webkit-scrollbar {
+  display: none;
+}
+.scrollTrack {
+  display: flex;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+
+@media (max-width: 1024px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}
