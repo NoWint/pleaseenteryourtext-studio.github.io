@@ -1,0 +1,74 @@
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ink {
+  background: var(--ink-deep);
+  color: var(--text-on-ink);
+}
+.paper {
+  background: var(--paper);
+  color: var(--text-on-paper);
+}
+
+.gridLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ink .gridLayer {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.paper .gridLayer {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.scanLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ink .scanLayer {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.03) 0,
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+.paper .scanLayer {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.025) 0,
+    rgba(0,0,0,0.025) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 2px solid currentColor;
+}
+.tl { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+.tr { top: 16px; right: 16px; border-left: 0; border-bottom: 0; }
+.bl { bottom: 16px; left: 16px; border-right: 0; border-top: 0; }
+.br { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,33 @@
+.mark {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-title);
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.coord {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.ink { color: var(--text-on-ink); }
+.paper { color: var(--text-on-paper); }
