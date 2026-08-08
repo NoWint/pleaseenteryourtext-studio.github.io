@@ -1,36 +1,55 @@
-import type { Member } from '../data/members';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Member } from '../data/members';
 import styles from './MemberCard.module.css';
 
-interface MemberCardProps {
+export interface MemberCardProps {
   member: Member;
+  index: number;
 }
 
-export function MemberCard({ member }: MemberCardProps) {
+export function MemberCard({ member, index }: MemberCardProps) {
+  const num = String(index + 1).padStart(2, '0');
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const initial = member.name.charAt(0).toUpperCase();
+
   return (
-    <div className={styles.card}>
-      <img
-        src={member.avatarUrl}
-        alt={member.name}
-        className={styles.avatar}
-        loading="lazy"
-        onError={(e) => {
-          const target = e.currentTarget;
-          target.style.display = 'none';
-          const fallback = target.nextElementSibling as HTMLElement | null;
-          if (fallback) fallback.style.display = 'flex';
-        }}
-      />
-      <div className={styles.avatarFallback} aria-hidden="true">
-        {member.name.charAt(0)}
+    <motion.article
+      className={styles.card}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+    >
+      <div className={styles.sliceCorner} aria-hidden="true" />
+      <div className={styles.head}>
+        <span className={styles.num}>{num}</span>
+        <span className={styles.role}>{member.role}</span>
       </div>
-      <div className={styles.info}>
-        <h4 className={styles.name}>{member.name}</h4>
-        <p className={styles.tagline}>{member.tagline}</p>
-        <p className={styles.role}>{member.role} · {member.direction}</p>
-        <a href={member.siteUrl} target="_blank" rel="noopener noreferrer" className={styles.site}>
-          {member.siteLabel} →
-        </a>
+      <div className={styles.avatarWrap}>
+        {avatarFailed ? (
+          <div className={styles.fallback}>{initial}</div>
+        ) : (
+          <img
+            src={member.avatarUrl}
+            alt={member.name}
+            className={styles.avatar}
+            loading="lazy"
+            onError={() => setAvatarFailed(true)}
+          />
+        )}
       </div>
-    </div>
+      <h3 className={styles.name}>{member.name}</h3>
+      <div className={styles.direction}>{member.direction}</div>
+      <p className={styles.tagline}>{member.tagline}</p>
+      <a
+        href={member.siteUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.site}
+      >
+        {member.siteLabel} ↗
+      </a>
+    </motion.article>
   );
 }
