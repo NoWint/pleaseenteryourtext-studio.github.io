@@ -5,7 +5,7 @@
   position: relative;
 }
 
-/* 斜切骨架：左黑块 + 右白底区 + 右下浅灰斜切块 */
+/* 斜切骨架：左黑块 + 右白底 + 右下浅灰斜切块 */
 .sliceBg {
   position: absolute;
   top: 0;
@@ -47,7 +47,7 @@
   font-size: var(--text-label);
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  z-index: 3;
+  z-index: 5;
 }
 .topL { color: var(--text-on-ink-3); }
 .topC, .topR {
@@ -70,186 +70,90 @@
   50% { opacity: 0.2; }
 }
 
-/* 标题区 */
-.titleArea {
+/* 巨字 · 主视觉 · 自适应（宽高双向约束，主体冲击力） */
+.megaTL {
   position: absolute;
-  left: 60px;
-  top: 34%;
-  transform: translateY(-50%);
-  z-index: 3;
-  max-width: 60%;
+  top: 13vh;
+  left: 4vw;
+  z-index: 4;
+  max-width: 56%;
 }
+.megaBR {
+  position: absolute;
+  bottom: 13vh;
+  right: 4vw;
+  z-index: 4;
+  text-align: right;
+  max-width: 56%;
+}
+.mega {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(56px, min(18vh, 15vw), 210px);
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  margin: 0;
+}
+.megaTL .mega { color: var(--text-on-ink); }
+.megaBR .mega { color: var(--text-on-paper); }
+
+/* 副标微字 */
 .pre {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: 0.3em;
-  color: var(--text-on-ink-3);
   text-transform: uppercase;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
-.title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: var(--text-mega);
-  letter-spacing: -0.05em;
-  line-height: 0.84;
-  color: var(--text-on-ink);
-}
-.outline {
-  -webkit-text-stroke: 2.5px var(--text-on-ink);
-  color: transparent;
-}
-.sub {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-caption);
-  letter-spacing: 0.22em;
-  color: var(--text-on-ink-2);
-  margin-top: var(--space-3);
-  text-transform: uppercase;
-}
+.megaTL .pre { color: var(--text-on-ink-3); }
+.megaBR .pre { color: var(--text-on-paper-3); }
 
-/* 章戳 */
-.stamp {
-  position: absolute;
-  right: 60px;
-  top: 60px;
-  text-align: right;
-  z-index: 3;
-}
-.stampLbl {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.2em;
-  color: var(--ink);
-  text-transform: uppercase;
-  opacity: 0.6;
-}
-.stampBig {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 48px;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: var(--ink);
-  margin-top: 4px;
-}
-.stampBlk {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 3px 8px;
-  display: inline-block;
-  margin-top: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-/* 数据表 */
-.dataArea {
-  position: absolute;
-  right: 60px;
-  bottom: 60px;
-  width: 30%;
-  z-index: 3;
-}
-
-/* 左下 HUD */
-.hudBl {
-  position: absolute;
-  left: 60px;
-  bottom: 60px;
-  z-index: 3;
-}
-.bar {
-  width: 150px;
-  margin-bottom: var(--space-2);
-}
-.barLbl {
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  letter-spacing: 0.2em;
-  color: var(--text-on-ink-3);
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-.barTrack {
-  height: 2px;
-  background: var(--line);
-  position: relative;
-}
-.barFill {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 72%;
-  background: var(--text-on-ink);
-}
-.tickrow {
-  display: flex;
-  gap: 4px;
-}
-.tickrow i {
-  display: block;
-  width: 3px;
-  height: 10px;
-  background: var(--line-2);
-}
-.tickrow .on {
-  background: var(--text-on-ink);
-}
-
-/* CTA */
-.cta {
-  position: absolute;
-  right: 60px;
-  bottom: 18px;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 10px 24px;
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  font-weight: 700;
-  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
-  z-index: 3;
-}
-
-/* 坐标 */
+/* 坐标条 */
 .coord {
   position: absolute;
   left: 60px;
   bottom: 24px;
+  z-index: 5;
   font-family: var(--font-mono);
   font-size: var(--text-micro);
-  color: var(--text-on-ink-4);
   letter-spacing: 0.2em;
-  z-index: 3;
+  color: var(--text-on-ink-4);
 }
 .coord b {
   color: var(--text-on-ink);
   font-weight: 400;
 }
 
+/* 右下封口刻度 */
+.seal {
+  position: absolute;
+  right: 60px;
+  bottom: 24px;
+  z-index: 5;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  color: var(--text-on-paper-3);
+  text-transform: uppercase;
+}
+
 /* 响应式 */
 @media (max-width: 1024px) {
-  .topbar, .titleArea, .stamp, .dataArea, .hudBl, .cta, .coord {
-    left: var(--space-4);
-    right: var(--space-4);
-  }
-  .titleArea { max-width: 90%; }
-  .dataArea { width: 45%; }
-  .stamp { display: none; }
+  .topbar { left: var(--space-4); right: var(--space-4); }
+  .megaTL { left: 6vw; max-width: 88%; }
+  .megaBR { right: 6vw; max-width: 88%; }
+  .coord { left: var(--space-4); }
+  .seal { right: var(--space-4); }
 }
 @media (max-width: 768px) {
-  .topbar { font-size: var(--text-micro); }
-  .title { font-size: clamp(40px, 12vw, 64px); }
-  .dataArea { position: relative; width: 100%; bottom: auto; right: auto; margin-top: var(--space-7); padding: 0 var(--space-4); }
-  .hudBl { bottom: var(--space-4); }
-  .cta { bottom: var(--space-4); }
-  .coord { display: none; }
+  .mega {
+    font-size: clamp(40px, min(15vh, 16vw), 120px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  .megaTL { top: 12vh; left: 6vw; }
+  .megaBR { bottom: 12vh; right: 6vw; }
+  .topbar { left: 20px; right: 20px; font-size: var(--text-micro); letter-spacing: 0.18em; }
+  .coord { left: 20px; bottom: 14px; }
+  .seal { right: 20px; bottom: 14px; }
 }
