@@ -8,11 +8,11 @@ export const SITE = {
 } as const;
 
 export const SECTIONS = [
-  { id: 'hero', label: '首屏' },
-  { id: 'about', label: '关于' },
-  { id: 'projects', label: '项目' },
-  { id: 'team', label: '团队' },
-  { id: 'join', label: '加入' },
+  { id: 'hero', label: 'HERO', num: '00' },
+  { id: 'about', label: 'ABOUT', num: '01' },
+  { id: 'projects', label: 'PROJECTS', num: '02' },
+  { id: 'team', label: 'TEAM', num: '03' },
+  { id: 'join', label: 'JOIN', num: '04' },
 ] as const;
 
 export const NAV_LINKS = [

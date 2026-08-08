@@ -1,49 +1,47 @@
 :root {
-  --canvas: transparent;
-  --surface-elevated: rgba(10, 10, 12, 0.65);
-  --surface-2: #1C1C1E;
-  --hairline: rgba(255, 255, 255, 0.08);
+  /* 黑白灰阶（无 hue） */
+  --ink:           #000000;
+  --ink-deep:      #0a0a0a;
+  --ink-elevated:  #0c0c0c;
+  --ink-surface:   #111111;
+  --ink-2:         #1C1C1E;
+  --line:          #2a2a2a;
+  --line-2:        #333333;
+  --line-3:        #444444;
 
-  --prism-1: #FF006E;
-  --prism-2: #8338EC;
-  --prism-3: #3A86FF;
-  --prism-gradient: linear-gradient(90deg, var(--prism-1), var(--prism-2), var(--prism-3));
+  --paper:         #ffffff;
+  --paper-2:       #f4f4f4;
+  --paper-3:       #e8e8e8;
 
-  --text-primary: #F5F5F7;
-  --text-secondary: #A1A1A6;
-  --text-tertiary: #6E6E73;
+  --text-on-ink:        #ffffff;
+  --text-on-ink-2:      #bbbbbb;
+  --text-on-ink-3:      #888888;
+  --text-on-ink-4:      #666666;
 
-  --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-  --font-text: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-  --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --text-on-paper:      #000000;
+  --text-on-paper-2:    #444444;
+  --text-on-paper-3:    #666666;
+  --text-on-paper-4:    #888888;
 
-  --text-hero: 96px;
-  --text-display: 72px;
-  --text-title: 48px;
-  --text-headline: 32px;
-  --text-body: 17px;
-  --text-caption: 14px;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  --font-text:    var(--font-mono);
+
+  --text-mega:     clamp(56px, 9vw, 104px);
+  --text-display:  clamp(40px, 6vw, 72px);
+  --text-title:    clamp(28px, 4vw, 48px);
+  --text-headline: clamp(20px, 2.5vw, 32px);
+  --text-body:     15px;
+  --text-caption:  13px;
+  --text-label:    11px;
+  --text-micro:    9px;
 
   --space-1: 8px; --space-2: 16px; --space-3: 24px; --space-4: 32px;
-  --space-5: 48px; --space-6: 64px; --space-7: 96px;
+  --space-5: 48px; --space-6: 64px; --space-7: 96px; --space-8: 128px;
 
-  --container-wide: 1440px;
-  --container-narrow: 760px;
-
-  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-slow: 0.8s;
-  --duration-medium: 0.4s;
-  --duration-fast: 0.2s;
+  --container: 1320px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-slow: 0.8s; --dur-med: 0.4s; --dur-fast: 0.2s;
 
   color-scheme: dark;
-}
-
-@media (max-width: 1024px) {
-  :root { --text-hero: 64px; --text-display: 48px; --text-title: 36px; }
-}
-@media (max-width: 768px) {
-  :root { --text-hero: 48px; --text-display: 36px; --text-title: 28px; --text-headline: 24px; }
-}
-@media (max-width: 640px) {
-  :root { --text-hero: 36px; --text-display: 28px; }
 }
