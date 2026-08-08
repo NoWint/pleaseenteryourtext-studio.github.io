@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Member } from '../data/members';
 import styles from './MemberCard.module.css';
 
@@ -12,11 +12,12 @@ export function MemberCard({ member, index }: MemberCardProps) {
   const num = String(index + 1).padStart(2, '0');
   const [avatarFailed, setAvatarFailed] = useState(false);
   const initial = member.name.charAt(0).toUpperCase();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.article
       className={styles.card}
-      initial={{ opacity: 0, y: 20 }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-10%' }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
