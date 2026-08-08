@@ -70,32 +70,63 @@
   50% { opacity: 0.2; }
 }
 
-/* 巨字 · 主视觉 · 自适应（宽高双向约束，主体冲击力） */
+/* 巨字 · 主视觉 · 自适应（宽高双向约束，几乎占满首屏主体） */
 .megaTL {
   position: absolute;
-  top: 13vh;
-  left: 4vw;
+  top: 11vh;
+  left: 3vw;
   z-index: 4;
-  max-width: 56%;
+  max-width: 62%;
+  mix-blend-mode: difference;
+  color: var(--paper);
 }
 .megaBR {
   position: absolute;
-  bottom: 13vh;
-  right: 4vw;
+  bottom: 11vh;
+  right: 3vw;
   z-index: 4;
   text-align: right;
-  max-width: 56%;
+  max-width: 62%;
+  mix-blend-mode: difference;
+  color: var(--paper);
 }
 .mega {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(56px, min(18vh, 15vw), 210px);
-  letter-spacing: -0.045em;
-  line-height: 0.88;
+  font-size: clamp(72px, min(24vh, 20vw), 300px);
+  letter-spacing: -0.05em;
+  line-height: 0.84;
   margin: 0;
+  color: var(--paper);
 }
-.megaTL .mega { color: var(--text-on-ink); }
-.megaBR .mega { color: var(--text-on-paper); }
+
+/* YOUR TEXT 上方元信息：Made by @NoWint（灰） + 跳动秒数（黑） */
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.metaMade {
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--text-on-ink-3);
+}
+.metaTime {
+  font-size: var(--text-headline);
+  font-weight: 700;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+  animation: tickPulse 1s var(--ease) infinite;
+}
+@keyframes tickPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
 
 /* 副标微字 */
 .pre {
@@ -104,9 +135,29 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
   margin-bottom: var(--space-1);
+  color: var(--text-on-ink-3);
 }
-.megaTL .pre { color: var(--text-on-ink-3); }
-.megaBR .pre { color: var(--text-on-paper-3); }
+
+/* PLEASE ENTER 下方链接行（白色，跨底反色继承父 mix-blend-mode） */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.link {
+  color: var(--paper);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s var(--ease);
+}
+a.link:hover {
+  opacity: 0.6;
+}
 
 /* 坐标条 */
 .coord {
@@ -140,19 +191,20 @@
 /* 响应式 */
 @media (max-width: 1024px) {
   .topbar { left: var(--space-4); right: var(--space-4); }
-  .megaTL { left: 6vw; max-width: 88%; }
-  .megaBR { right: 6vw; max-width: 88%; }
+  .megaTL { left: 5vw; max-width: 90%; }
+  .megaBR { right: 5vw; max-width: 90%; }
   .coord { left: var(--space-4); }
   .seal { right: var(--space-4); }
 }
 @media (max-width: 768px) {
   .mega {
-    font-size: clamp(40px, min(15vh, 16vw), 120px);
-    line-height: 0.92;
-    letter-spacing: -0.035em;
+    font-size: clamp(48px, min(20vh, 18vw), 160px);
+    line-height: 0.86;
+    letter-spacing: -0.04em;
   }
-  .megaTL { top: 12vh; left: 6vw; }
-  .megaBR { bottom: 12vh; right: 6vw; }
+  .megaTL { top: 10vh; left: 6vw; }
+  .megaBR { bottom: 10vh; right: 6vw; }
+  .metaTime { font-size: var(--text-title); }
   .topbar { left: 20px; right: 20px; font-size: var(--text-micro); letter-spacing: 0.18em; }
   .coord { left: 20px; bottom: 14px; }
   .seal { right: 20px; bottom: 14px; }
