@@ -1,10 +1,9 @@
-.bar {
+.progress {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: var(--prism-gradient);
-  transform-origin: 0%;
+  height: 1px;
+  background: var(--paper);
   z-index: 200;
 }
