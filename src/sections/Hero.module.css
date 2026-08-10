@@ -205,7 +205,9 @@ a.link:hover {
   .megaTL { top: 10vh; left: 6vw; }
   .megaBR { bottom: 10vh; right: 6vw; }
   .metaTime { font-size: var(--text-title); }
-  .topbar { left: 20px; right: 20px; font-size: var(--text-micro); letter-spacing: 0.18em; }
-  .coord { left: 20px; bottom: 14px; }
-  .seal { right: 20px; bottom: 14px; }
+  /* 顶栏与固定导航条冲突，窄屏隐藏（导航条已承担功能） */
+  .topbar { display: none; }
+  /* coord/seal 纵向堆叠避免重叠 */
+  .coord { left: 20px; bottom: 40px; }
+  .seal { right: auto; left: 20px; bottom: 14px; }
 }

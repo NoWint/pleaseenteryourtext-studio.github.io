@@ -98,3 +98,19 @@
     clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);
   }
 }
+
+@media (max-width: 768px) {
+  /* 窄屏：黑块装饰退场，左栏自带黑底白字，右栏白底黑字，保证可读 */
+  .sliceInk {
+    display: none;
+  }
+  .leftCol {
+    background: var(--ink);
+    padding: var(--space-5) var(--space-4);
+    margin-left: calc(-1 * var(--space-4));
+    margin-right: calc(-1 * var(--space-4));
+  }
+  .rightCol {
+    padding: var(--space-4) 0;
+  }
+}

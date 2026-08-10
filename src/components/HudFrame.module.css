@@ -66,6 +66,12 @@
 .bl { bottom: 16px; left: 16px; border-right: 0; border-top: 0; }
 .br { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
 
+/* 窄屏：顶角下移避让固定导航条 */
+@media (max-width: 768px) {
+  .tl { top: 48px; }
+  .tr { top: 48px; }
+}
+
 .content {
   position: relative;
   z-index: 1;

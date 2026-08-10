@@ -72,4 +72,10 @@
   .body {
     grid-template-columns: 1fr;
   }
+  /* grid/flex item 含横滚器需 min-width:0，否则 1fr 被 min-content 抬到 1296px */
+  .flagshipArea,
+  .restArea,
+  .scrollWrap {
+    min-width: 0;
+  }
 }

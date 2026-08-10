@@ -40,7 +40,6 @@
   font-size: var(--text-micro);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--text-on-paper-2);
   background: var(--ink);
   color: var(--paper);
   padding: 2px 6px;
@@ -51,6 +50,17 @@
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--ink);
+}
+
+/* 窄屏：限制头像高度，避免单列卡片过长 */
+@media (max-width: 480px) {
+  .avatarWrap {
+    aspect-ratio: 16 / 9;
+    max-height: 180px;
+  }
+  .fallback {
+    font-size: 36px;
+  }
 }
 .avatar {
   width: 100%;
