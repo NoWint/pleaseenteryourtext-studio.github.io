@@ -15,7 +15,7 @@ export const MEMBERS: Member[] = [
     name: 'NoWint',
     role: '联合创始人',
     direction: 'Desktop @ macOS · TUI',
-    tagline: '「我是神」',
+    tagline: '「我是(yuan)神」',
     avatarUrl: `${RAW_BASE}/NoWint/NoWint.png`,
     siteUrl: 'https://nowint.github.io/',
     siteLabel: 'nowint.github.io',
