@@ -11,12 +11,17 @@ export interface MemberCardProps {
 export function MemberCard({ member, index }: MemberCardProps) {
   const num = String(index + 1).padStart(2, '0');
   const [avatarFailed, setAvatarFailed] = useState(false);
+  const [active, setActive] = useState(false);
   const initial = member.name.charAt(0).toUpperCase();
   const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.article
       className={styles.card}
+      // 移动端 tap 彩色：pointerenter/leave 在触摸 tap 时也会触发，桌面 hover 同样生效
+      onPointerEnter={() => setActive(true)}
+      onPointerLeave={() => setActive(false)}
+      data-active={active}
       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-10%' }}

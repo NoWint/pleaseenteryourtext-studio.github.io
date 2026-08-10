@@ -1,14 +1,15 @@
-import { useState } from 'react';
 import { ScanReveal } from '../components/ScanReveal';
 import { SectorMark } from '../components/SectorMark';
 import { HudFrame } from '../components/HudFrame';
+import { QrCode } from '../components/QrCode';
 import { SITE } from '../data/site';
 import styles from './Join.module.css';
 
-const QR_URL = 'https://raw.githubusercontent.com/PleaseEnterYourText-Studio/About/main/JOINUS.jpg';
+// QQ 群：PleaseEnterYourText摸鱼群
+const QQ_GROUP_URL = 'https://qm.qq.com/q/Pi3pI6fVe';
+const QQ_GROUP_NAME = 'PleaseEnterYourText摸鱼群';
 
 export function Join() {
-  const [qrFailed, setQrFailed] = useState(false);
   return (
     <section id="join" className={styles.join}>
       <HudFrame variant="ink" corners grid scan>
@@ -35,24 +36,16 @@ export function Join() {
 
             <div className={styles.qrArea}>
               <div className={styles.qrLabel}>// CONTACT — QQ GROUP</div>
-              {qrFailed ? (
-                <div className={styles.qrFallback}>
-                  QQ 群：联系群主
-                  <a href={SITE.githubOrg} target="_blank" rel="noopener noreferrer" className={styles.qrLink}>
-                    GitHub 组织 ↗
-                  </a>
-                </div>
-              ) : (
-                <a href={SITE.githubOrg} target="_blank" rel="noopener noreferrer" className={styles.qrImgWrap}>
-                  <img
-                    src={QR_URL}
-                    alt="QQ 群二维码"
-                    className={styles.qrImg}
-                    loading="lazy"
-                    onError={() => setQrFailed(true)}
-                  />
-                </a>
-              )}
+              <a
+                href={QQ_GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.qrImgWrap}
+                aria-label={`加入 ${QQ_GROUP_NAME}`}
+              >
+                <QrCode value={QQ_GROUP_URL} size={200} ecc="M" title={`${QQ_GROUP_NAME} 二维码`} />
+              </a>
+              <div className={styles.qrName}>{QQ_GROUP_NAME}</div>
               <a
                 href={SITE.githubOrg}
                 target="_blank"
